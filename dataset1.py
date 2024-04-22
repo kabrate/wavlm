@@ -26,6 +26,6 @@ class ASVspoof2019Dataset(Dataset):
 def collate_fn(batch):
     audios, labels = zip(*batch)
     feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained('microsoft/wavlm-large')
-    inputs = feature_extractor(audios, sampling_rate=16000, return_tensors='pt', padding=True).input_values
+    audios = feature_extractor(audios, sampling_rate=16000, return_tensors='pt', padding=True).input_values
     labels = torch.tensor(labels)
     return audios, labels
