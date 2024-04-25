@@ -13,7 +13,7 @@ class ASVspoof2019Dataset(Dataset):
         data = np.genfromtxt(labels_dir, dtype='str', delimiter=' ')
         # Extract the last column which contains the labels
         labels = data[:, -1].tolist()
-        files= data[:, 0].tolist()
+        files= data[:, 1].tolist()
         self.file_paths = [root_dir + file +'.flac' for file in files]
         self.labels = labels
 
