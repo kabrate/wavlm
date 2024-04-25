@@ -1,7 +1,7 @@
 from transformers import Wav2Vec2FeatureExtractor, WavLMForXVector, WavLMModel,Wav2Vec2ForSequenceClassification, Wav2Vec2Processor
 from transformers import TrainingArguments
 from transformers import Trainer
-from dataset1 import ASVspoof2019Dataset
+from dataset1 import ASVspoof2019Dataset,collate_fn
 import os
 asv2019_path='D:/dataset/LA/LA/'
 
@@ -25,8 +25,9 @@ training_args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=train_dataset,  # training dataset
-    eval_dataset=eval_dataset,    # evaluation dataset
+    train_dataset=train_dataset,
+    eval_dataset=eval_dataset,
+    data_collator=collate_fn,  # Pass your custom collate function
 )
 
 trainer.train()
