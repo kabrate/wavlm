@@ -24,12 +24,17 @@ class ASVspoof2019Dataset(Dataset):
         label = self.labels[idx]
         return audio, label
 
+
 def collate_fn(batch):
     audios, labels = zip(*batch)
     feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained('microsoft/wavlm-large')
     audios = feature_extractor(audios, sampling_rate=16000, return_tensors='pt', padding=True).input_values
-    labels = torch.tensor(labels)
-    return audios, labels
+    # Convert labels from 'bonafide'/'spoof' to 0/1 integers if they are not already integers
+    labels = [0 if label == 'spoof' else 1 for label in labels]
+    labels = torch.tensor(labels, dtype=torch.long)  # Ensure labels are torch.long for classification
+    return {"input_values": audios, "labels": labels}
+
+
 
 # traindata=ASVspoof2019Dataset('D:/dataset/LA/LA/ASVspoof2019_LA_train/flac/','D:/dataset/LA/LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt')
 # t=1
