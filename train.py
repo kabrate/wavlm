@@ -3,17 +3,19 @@ from transformers import TrainingArguments
 from transformers import Trainer
 from dataset1 import ASVspoof2019Dataset,collate_fn
 import os
-asv2019_path='D:/dataset/LA/LA/'
+#from transformers import DataCollatorWithPadding
+
+asv2019_path='/home/jupyter-fjc/LA/'
 
 processor =Wav2Vec2FeatureExtractor.from_pretrained('microsoft/wavlm-large')
 model = Wav2Vec2ForSequenceClassification.from_pretrained('microsoft/wavlm-large')
 train_dataset = ASVspoof2019Dataset(os.path.join(asv2019_path,'ASVspoof2019_LA_train/flac/') , os.path.join(asv2019_path,'ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt'))
-eval_dataset = ASVspoof2019Dataset('D:/dataset/LA/LA/ASVspoof2019_LA_train/flac/',os.path.join(asv2019_path,'ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt'))
+eval_dataset = ASVspoof2019Dataset(os.path.join(asv2019_path,'ASVspoof2019_LA_dev/flac/'),os.path.join(asv2019_path,'ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt'))
 
 training_args = TrainingArguments(
     output_dir="./models/anti_spoofing",
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=16,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
     num_train_epochs=3,
     save_steps=500,
     evaluation_strategy="steps",
@@ -25,9 +27,9 @@ training_args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=train_dataset,
-    eval_dataset=eval_dataset,
-    data_collator=collate_fn,  # Pass your custom collate function
+    train_dataset=train_dataset,  # training dataset
+    eval_dataset=eval_dataset,    # evaluation dataset
+    data_collator=collate_fn,
 )
 
 trainer.train()
