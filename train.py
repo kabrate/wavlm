@@ -2,10 +2,13 @@ from transformers import Wav2Vec2FeatureExtractor, WavLMForXVector, WavLMModel,W
 from transformers import TrainingArguments
 from transformers import Trainer
 from dataset1 import ASVspoof2019Dataset
-processor = Wav2Vec2Processor.from_pretrained('microsoft/wavlm-large')
+import os
+asv2019_path='D:/dataset/LA/LA/'
+
+processor =Wav2Vec2FeatureExtractor.from_pretrained('microsoft/wavlm-large')
 model = Wav2Vec2ForSequenceClassification.from_pretrained('microsoft/wavlm-large')
-train_dataset = ASVspoof2019Dataset(your_train_data)
-eval_dataset = ASVspoof2019Dataset(your_eval_data)
+train_dataset = ASVspoof2019Dataset(os.path.join(asv2019_path,'ASVspoof2019_LA_train/flac/') , os.path.join(asv2019_path,'ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt'))
+eval_dataset = ASVspoof2019Dataset('D:/dataset/LA/LA/ASVspoof2019_LA_train/flac/',os.path.join(asv2019_path,'ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt'))
 
 training_args = TrainingArguments(
     output_dir="./models/anti_spoofing",
